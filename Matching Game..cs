@@ -17,6 +17,7 @@ namespace WFMatchingGame
         {
             InitializeComponent();
             AssignIconsToSquares();
+            MessageBox.Show("Ready to play?", "Let's Start");
         }
 
         Random random = new Random();
@@ -61,7 +62,6 @@ namespace WFMatchingGame
             };
             AssignIconsToSquares();
         }
-
 
         private void AssignIconsToSquares()
         {
@@ -131,7 +131,7 @@ namespace WFMatchingGame
             }
             timer2.Stop();
             string timeDisplay = string.Format("{0:00}:{1:00}:{2:00}", elapsedHours, elapsedMinutes, elapsedSeconds);
-            MessageBox.Show("You matched all the icons! " + timeDisplay + "", "Congratulations");
+            MessageBox.Show("Fantastic! You matched all the icons in " + timeDisplay + "", "Congratulations");
             //Close();
             ResetValues();
         }

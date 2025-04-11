@@ -16,8 +16,19 @@ namespace WFMatchingGame
         public Form1()
         {
             InitializeComponent();
-            AssignIconsToSquares();
-            MessageBox.Show("Ready to play?", "Let's Start");
+            tableLayoutPanel1.Visible = false;
+            //AssignIconsToSquares();
+            //MessageBoxButtons MsgBtn = MessageBoxButtons.YesNo;
+            //DialogResult result = MessageBox.Show("Ready to play?", "Let's Start", MsgBtn);
+            //if (result == DialogResult.Yes)
+            //{
+            //    timer2.Start();
+            //}
+            //else
+            //{
+            //    Task.Delay(500);
+            //    this.Close();
+            //}
         }
 
         Random random = new Random();
@@ -46,6 +57,8 @@ namespace WFMatchingGame
         private int elapsedMinutes = 0;
         private int elapsedHours = 0;
         private int animationStep = 0;
+        private int rows = 0;
+        private int columns = 0;
 
 
         private void ResetValues()
@@ -61,21 +74,6 @@ namespace WFMatchingGame
             "!", "!","N", "N","k", "k","y", "y","b", "b","v", "v","w", "w","z", "z","d", "d","t", "t","f", "f","h", "h","j", "j","l", "l","p", "p"
             };
             AssignIconsToSquares();
-        }
-
-        private void AssignIconsToSquares()
-        {
-            foreach (Control control in tableLayoutPanel1.Controls)
-            {
-                Label iconLabel = control as Label;
-                if (iconLabel != null)
-                {
-                    int randomNumber = random.Next(icons.Count);
-                    iconLabel.Text = icons[randomNumber];
-                    iconLabel.ForeColor = iconLabel.BackColor;
-                    icons.RemoveAt(randomNumber);
-                }
-            }
             timer2.Start();
         }
 
@@ -202,14 +200,111 @@ namespace WFMatchingGame
             card2.BackColor = temp;
         }
 
-        //private async void HighlightMatch(PictureBox card1, PictureBox card2)
-        //{
-        //    card1.BackColor = Color.LimeGreen;
-        //    card2.BackColor = Color.LimeGreen;
-        //    await Task.Delay(300);
-        //    card1.BackColor = Color.White;
-        //    card2.BackColor = Color.White;
-        //}
+        private void startGameButton_Click(object sender, EventArgs e)
+        {
+            string playerName = nameTextBox.Text;
+            string selectedLevel = levelComboBox.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(playerName))
+            {
+                MessageBox.Show("Please enter your name.", "Information");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(selectedLevel))
+            {
+                MessageBox.Show("Please select a game level.", "Information");
+                return;
+            }
+            SetGridSizeByLevel(selectedLevel);
+
+            tableLayoutPanel1.Controls.Clear();
+            tableLayoutPanel1.RowStyles.Clear();
+            tableLayoutPanel1.ColumnStyles.Clear();
+
+            tableLayoutPanel1.RowCount = rows;
+            tableLayoutPanel1.ColumnCount = columns;
+
+            for (int i = 0; i < rows; i++)
+            {
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rows));
+            }
+            for (int i = 0; i < columns; i++)
+            {
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / columns));
+            }
+
+            InitializeGameGrid();
+
+            nameLevelPanel.Visible = false;
+            tableLayoutPanel1.Visible = true;
+        }
+
+        private void SetGridSizeByLevel(string level)
+        {
+            // Your logic to determine rows and columns based on the level
+            switch (level)
+            {
+                case "Easy":
+                    rows = 2;
+                    columns = 4;
+                    break;
+                case "Medium":
+                    rows = 4;
+                    columns = 4;
+                    break;
+                case "Hard":
+                    rows = 4;
+                    columns = 6;
+                    break;
+                default:
+                    rows = 2;
+                    columns = 4;
+                    break;
+            }
+        }
+        private void InitializeGameGrid()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    Label iconLabel = CreateIconLabel();
+                    tableLayoutPanel1.Controls.Add(iconLabel, j, i);
+                }
+            }
+            AssignIconsToSquares();
+            timer2.Start();
+        }
+
+        private Label CreateIconLabel()
+        {
+            Label label = new Label();
+            label.AutoSize = true;
+            label.Dock = DockStyle.Fill;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.Font = new Font("Webdings", 48F, FontStyle.Bold); // Example icon font
+            label.ForeColor = label.BackColor;
+            label.Click += new EventHandler(label1_Click); // Your click event handler
+            return label;
+        }
+        private void AssignIconsToSquares()
+        {
+            var temp = icons.Take(tableLayoutPanel1.Controls.Count).ToList();
+            foreach (Control control in tableLayoutPanel1.Controls)
+            {
+                Label iconLabel = control as Label;
+                if (iconLabel != null)
+                {
+                    int randomNumber = random.Next(temp.Count);
+                    iconLabel.Text = temp[randomNumber];
+                    iconLabel.ForeColor = iconLabel.BackColor;
+                    temp.RemoveAt(randomNumber);
+                }
+            }
+        }
     }
 
+
 }
+

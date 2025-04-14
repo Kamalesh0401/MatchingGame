@@ -63,7 +63,7 @@ namespace WFMatchingGame
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label17 = new System.Windows.Forms.Label();
+            this.TimerLbl = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.nameLevelPanel = new System.Windows.Forms.Panel();
             this.label34 = new System.Windows.Forms.Label();
@@ -72,8 +72,15 @@ namespace WFMatchingGame
             this.label33 = new System.Windows.Forms.Label();
             this.nameTextBox = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
+            this.gameOverPanel = new System.Windows.Forms.Panel();
+            this.label35 = new System.Windows.Forms.Label();
+            this.playAgainBtn = new System.Windows.Forms.Button();
+            this.ExistBtn = new System.Windows.Forms.Button();
+            this.highScoreLbl = new System.Windows.Forms.Label();
+            this.yourScoreLbl = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.nameLevelPanel.SuspendLayout();
+            this.gameOverPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -498,18 +505,18 @@ namespace WFMatchingGame
             this.timer1.Interval = 250;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label17
+            // TimerLbl
             // 
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(12, 9);
-            this.label17.MaximumSize = new System.Drawing.Size(300, 30);
-            this.label17.MinimumSize = new System.Drawing.Size(200, 30);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(200, 30);
-            this.label17.TabIndex = 1;
-            this.label17.Text = "Timer : ";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label17.Click += new System.EventHandler(this.label1_Click);
+            this.TimerLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimerLbl.Location = new System.Drawing.Point(12, 9);
+            this.TimerLbl.MaximumSize = new System.Drawing.Size(300, 30);
+            this.TimerLbl.MinimumSize = new System.Drawing.Size(200, 30);
+            this.TimerLbl.Name = "TimerLbl";
+            this.TimerLbl.Size = new System.Drawing.Size(200, 30);
+            this.TimerLbl.TabIndex = 1;
+            this.TimerLbl.Text = "Timer : ";
+            this.TimerLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TimerLbl.Click += new System.EventHandler(this.label1_Click);
             // 
             // timer2
             // 
@@ -592,6 +599,70 @@ namespace WFMatchingGame
             this.label32.TabIndex = 0;
             this.label32.Text = "Enter name :";
             // 
+            // gameOverPanel
+            // 
+            this.gameOverPanel.Controls.Add(this.label35);
+            this.gameOverPanel.Controls.Add(this.playAgainBtn);
+            this.gameOverPanel.Controls.Add(this.ExistBtn);
+            this.gameOverPanel.Controls.Add(this.highScoreLbl);
+            this.gameOverPanel.Controls.Add(this.yourScoreLbl);
+            this.gameOverPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gameOverPanel.Location = new System.Drawing.Point(0, 0);
+            this.gameOverPanel.Margin = new System.Windows.Forms.Padding(12, 3, 3, 3);
+            this.gameOverPanel.Name = "gameOverPanel";
+            this.gameOverPanel.Size = new System.Drawing.Size(1054, 588);
+            this.gameOverPanel.TabIndex = 9;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Location = new System.Drawing.Point(358, 182);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(190, 37);
+            this.label35.TabIndex = 8;
+            this.label35.Text = "Game Over";
+            // 
+            // playAgainBtn
+            // 
+            this.playAgainBtn.Location = new System.Drawing.Point(408, 414);
+            this.playAgainBtn.Name = "playAgainBtn";
+            this.playAgainBtn.Size = new System.Drawing.Size(75, 23);
+            this.playAgainBtn.TabIndex = 7;
+            this.playAgainBtn.Text = "Play again";
+            this.playAgainBtn.UseVisualStyleBackColor = true;
+            this.playAgainBtn.Click += new System.EventHandler(this.playAgainBtn_Click);
+            // 
+            // ExistBtn
+            // 
+            this.ExistBtn.Location = new System.Drawing.Point(550, 414);
+            this.ExistBtn.Name = "ExistBtn";
+            this.ExistBtn.Size = new System.Drawing.Size(75, 23);
+            this.ExistBtn.TabIndex = 7;
+            this.ExistBtn.Text = "Exist";
+            this.ExistBtn.UseVisualStyleBackColor = true;
+            this.ExistBtn.Click += new System.EventHandler(this.EixtsBtn_Click);
+            // 
+            // highScoreLbl
+            // 
+            this.highScoreLbl.AutoSize = true;
+            this.highScoreLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.highScoreLbl.Location = new System.Drawing.Point(335, 342);
+            this.highScoreLbl.Name = "highScoreLbl";
+            this.highScoreLbl.Size = new System.Drawing.Size(234, 37);
+            this.highScoreLbl.TabIndex = 5;
+            this.highScoreLbl.Text = "High Score : 0";
+            // 
+            // yourScoreLbl
+            // 
+            this.yourScoreLbl.AutoSize = true;
+            this.yourScoreLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.yourScoreLbl.Location = new System.Drawing.Point(332, 270);
+            this.yourScoreLbl.Name = "yourScoreLbl";
+            this.yourScoreLbl.Size = new System.Drawing.Size(237, 37);
+            this.yourScoreLbl.TabIndex = 0;
+            this.yourScoreLbl.Text = "Your Score : 0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -600,8 +671,9 @@ namespace WFMatchingGame
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1054, 588);
             this.Controls.Add(this.nameLevelPanel);
-            this.Controls.Add(this.label17);
+            this.Controls.Add(this.TimerLbl);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.gameOverPanel);
             this.MinimumSize = new System.Drawing.Size(610, 610);
             this.Name = "Form1";
             this.Text = "Matching Game";
@@ -609,6 +681,8 @@ namespace WFMatchingGame
             this.tableLayoutPanel1.PerformLayout();
             this.nameLevelPanel.ResumeLayout(false);
             this.nameLevelPanel.PerformLayout();
+            this.gameOverPanel.ResumeLayout(false);
+            this.gameOverPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -633,7 +707,7 @@ namespace WFMatchingGame
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label TimerLbl;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label25;
@@ -656,6 +730,12 @@ namespace WFMatchingGame
         private ComboBox levelComboBox;
         private Button startGameButton;
         private Label label34;
+        private Panel gameOverPanel;
+        private Label label35;
+        private Button playAgainBtn;
+        private Button ExistBtn;
+        private Label highScoreLbl;
+        private Label yourScoreLbl;
     }
 }
 

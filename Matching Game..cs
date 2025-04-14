@@ -13,22 +13,15 @@ namespace WFMatchingGame
 {
     public partial class Form1 : Form
     {
+        private SQLlite _sqlLite;
         public Form1()
         {
             InitializeComponent();
+            _sqlLite = new SQLlite(this.levelComboBox.Items);
             tableLayoutPanel1.Visible = false;
-            //AssignIconsToSquares();
-            //MessageBoxButtons MsgBtn = MessageBoxButtons.YesNo;
-            //DialogResult result = MessageBox.Show("Ready to play?", "Let's Start", MsgBtn);
-            //if (result == DialogResult.Yes)
-            //{
-            //    timer2.Start();
-            //}
-            //else
-            //{
-            //    Task.Delay(500);
-            //    this.Close();
-            //}
+            gameOverPanel.Visible = false;
+            TimerLbl.Visible = false;
+            nameLevelPanel.Visible = true;
         }
 
         Random random = new Random();
@@ -59,7 +52,9 @@ namespace WFMatchingGame
         private int animationStep = 0;
         private int rows = 0;
         private int columns = 0;
-
+        private string _currentPlayerName = "";
+        private int _currentLevel = 0;
+        private string _highScore = "";
 
         private void ResetValues()
         {
@@ -129,9 +124,16 @@ namespace WFMatchingGame
             }
             timer2.Stop();
             string timeDisplay = string.Format("{0:00}:{1:00}:{2:00}", elapsedHours, elapsedMinutes, elapsedSeconds);
-            MessageBox.Show("Fantastic! You matched all the icons in " + timeDisplay + "", "Congratulations");
-            //Close();
-            ResetValues();
+            //MessageBox.Show("Fantastic! You matched all the icons in " + timeDisplay + "", "Congratulations");
+            _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+            tableLayoutPanel1.Visible = false;
+            TimerLbl.Visible = false;
+            gameOverPanel.Visible = true;
+            DataTable scoreTable = _sqlLite.GetHighScores(_currentLevel);
+            var time = new TimeSpan(elapsedHours, elapsedMinutes, elapsedSeconds);
+            this.yourScoreLbl.Text = "You matched all icons in :" + FormatTimeSpan(time);
+            this.highScoreLbl.Text = "Highiest Time :" + "in " + (_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard");
+            //ResetValues();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -165,10 +167,9 @@ namespace WFMatchingGame
                 elapsedMinutes = 0;
             }
 
-            // Format the time as HH:MM:SS
             string timeDisplay = string.Format("{0:00}:{1:00}:{2:00}", elapsedHours, elapsedMinutes, elapsedSeconds);
 
-            this.label17.Text = "Timer :" + timeDisplay;
+            this.TimerLbl.Text = "Timer :" + timeDisplay;
 
         }
         private void Form1_Resize(object sender, EventArgs e)
@@ -202,10 +203,10 @@ namespace WFMatchingGame
 
         private void startGameButton_Click(object sender, EventArgs e)
         {
-            string playerName = nameTextBox.Text;
+            _currentPlayerName = nameTextBox.Text;
             string selectedLevel = levelComboBox.SelectedItem?.ToString();
 
-            if (string.IsNullOrEmpty(playerName))
+            if (string.IsNullOrEmpty(_currentPlayerName))
             {
                 MessageBox.Show("Please enter your name.", "Information");
                 return;
@@ -235,9 +236,22 @@ namespace WFMatchingGame
             }
 
             InitializeGameGrid();
-
+            _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());
             nameLevelPanel.Visible = false;
             tableLayoutPanel1.Visible = true;
+            TimerLbl.Visible = true;
+        }
+        private void playAgainBtn_Click(object sender, EventArgs e)
+        {
+            ResetValues();
+            nameLevelPanel.Visible = false;
+            gameOverPanel.Visible = false;
+            tableLayoutPanel1.Visible = true;
+            TimerLbl.Visible = true;
+        }
+        private void EixtsBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void SetGridSizeByLevel(string level)
@@ -246,18 +260,22 @@ namespace WFMatchingGame
             switch (level)
             {
                 case "Easy":
+                    _currentLevel = 1;
                     rows = 2;
                     columns = 4;
                     break;
                 case "Medium":
+                    _currentLevel = 2;
                     rows = 4;
                     columns = 4;
                     break;
                 case "Hard":
+                    _currentLevel = 3;
                     rows = 4;
                     columns = 6;
                     break;
                 default:
+                    _currentLevel = 1;
                     rows = 2;
                     columns = 4;
                     break;
@@ -302,6 +320,10 @@ namespace WFMatchingGame
                     temp.RemoveAt(randomNumber);
                 }
             }
+        }
+        private string FormatTimeSpan(TimeSpan ts)
+        {
+            return $"{ts.Hours:D2}h:{ts.Minutes:D2} minutes:{ts.Seconds:D2} seconds";
         }
     }
 

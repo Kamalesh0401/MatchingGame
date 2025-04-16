@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SQLite;
 using System.IO;
 using System.Data;
 using System.Data.Common;
 using System.Collections;
+using System.Data.SQLite;
 using System.Windows.Forms;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace WFMatchingGame
 {
@@ -67,7 +68,7 @@ namespace WFMatchingGame
                         string createTableQuery = $@"CREATE TABLE IF NOT EXISTS {PlayersTable} (
                                                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                                    Name TEXT NOT NULL,
-                                                   Score INTEGER NOT NULL,
+                                                   Score TEXT NOT NULL,
                                                    Level INTEGER NOT NULL
                                                   );";
 
@@ -84,8 +85,9 @@ namespace WFMatchingGame
             }
         }
 
-        public void LoadOrCreatePlayerScore(string playerName, string level)
+        public string LoadOrCreatePlayerScore(string playerName, string level)
         {
+            string result = null;
             try
             {
                 using (SQLiteConnection dbConnection = new SQLiteConnection(_connectionString))
@@ -96,14 +98,14 @@ namespace WFMatchingGame
                     {
                         selectCommand.Parameters.AddWithValue("@name", playerName);
                         selectCommand.Parameters.AddWithValue("@level", level);
-                        var result = selectCommand.ExecuteScalar();
+                        var score = selectCommand.ExecuteScalar();
 
-                        if (result != null && result != DBNull.Value)
+                        if (score != null && score != DBNull.Value)
                         {
-                            // Player exists, load their score
-                            int playerScore = Convert.ToInt32(result);
-                            // Update your game UI with the loaded score
-                            // Example: scoreLabel.Text = $"Score: {playerScore}";
+                            result = score.ToString();
+                            //char[] ch = { ':' };
+                            //string[] time = result.ToString().Split(ch);
+                            //var score = new TimeSpan(Convert.ToInt32(time[0]), Convert.ToInt32(time[1]), Convert.ToInt32(time[2]));
                         }
                         else
                         {
@@ -113,8 +115,6 @@ namespace WFMatchingGame
                                 insertCommand.Parameters.AddWithValue("@name", playerName);
                                 insertCommand.Parameters.AddWithValue("@level", level);
                                 insertCommand.ExecuteNonQuery();
-                                // Initialize the score in your game UI to 0
-                                // Example: scoreLabel.Text = "Score: 0";
                             }
                         }
                     }
@@ -124,6 +124,7 @@ namespace WFMatchingGame
             {
 
             }
+            return result;
         }
 
         public void UpdatePlayerScore(string playerName, string newScore, string level)
@@ -159,7 +160,7 @@ namespace WFMatchingGame
             }
         }
 
-        public DataTable GetHighScores(int level, int limit = 10)
+        public DataTable GetHighScores(int level = 1)
         {
             DataTable highScoreTable = new DataTable();
             try
@@ -167,11 +168,10 @@ namespace WFMatchingGame
                 using (SQLiteConnection dbConnection = new SQLiteConnection(_connectionString))
                 {
                     dbConnection.Open();
-                    //string selectQuery = $"SELECT Name, Score FROM {PlayersTable} ORDER BY Score DESC LIMIT @limit";
-                    string selectQuery = $"SELECT * FROM Players;";
+                    //string selectQuery = $"SELECT Name, Score FROM {PlayersTable} WHERE Level = @level ORDER BY score;";
+                    string selectQuery = $"SELECT Name, Score, Level FROM {PlayersTable};";
                     using (SQLiteCommand command = new SQLiteCommand(selectQuery, dbConnection))
                     {
-                        //command.Parameters.AddWithValue("@limit", limit);
                         //command.Parameters.AddWithValue("@level", level);
                         using (var adapter = new SQLiteDataAdapter(command))
                         {
@@ -179,6 +179,10 @@ namespace WFMatchingGame
                         }
                     }
                 }
+            }
+            catch (SQLiteException ex)
+            {
+                Console.WriteLine($"SQLite Error retrieving high scores: {ex.Message}");
             }
             catch (Exception ex)
             {

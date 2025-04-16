@@ -46,6 +46,7 @@ namespace WFMatchingGame
 
         Label firstClicked = null;
         Label secondClicked = null;
+        private char[] ch = { ':' };
         private int elapsedSeconds = 0;
         private int elapsedMinutes = 0;
         private int elapsedHours = 0;
@@ -53,6 +54,7 @@ namespace WFMatchingGame
         private int rows = 0;
         private int columns = 0;
         private string _currentPlayerName = "";
+        private string _currentPlayerScore = "";
         private int _currentLevel = 0;
         private string _highScore = "";
 
@@ -125,14 +127,47 @@ namespace WFMatchingGame
             timer2.Stop();
             string timeDisplay = string.Format("{0:00}:{1:00}:{2:00}", elapsedHours, elapsedMinutes, elapsedSeconds);
             //MessageBox.Show("Fantastic! You matched all the icons in " + timeDisplay + "", "Congratulations");
-            _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+            var currenttime = new TimeSpan(elapsedHours, elapsedMinutes, elapsedSeconds);
+            if (!string.IsNullOrEmpty(_currentPlayerScore))
+            {
+                string[] crntPlyrHghtime = _currentPlayerScore?.ToString().Split(ch);
+                var score = new TimeSpan(Convert.ToInt32(crntPlyrHghtime[0]), Convert.ToInt32(crntPlyrHghtime[1]), Convert.ToInt32(crntPlyrHghtime[2]));
+                if (score > currenttime)
+                {
+                    _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+                }
+            }
+            else
+            {
+                _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+
+            }
+
             tableLayoutPanel1.Visible = false;
             TimerLbl.Visible = false;
             gameOverPanel.Visible = true;
             DataTable scoreTable = _sqlLite.GetHighScores(_currentLevel);
-            var time = new TimeSpan(elapsedHours, elapsedMinutes, elapsedSeconds);
-            this.yourScoreLbl.Text = "You matched all icons in :" + FormatTimeSpan(time);
-            this.highScoreLbl.Text = "Highiest Time :" + "in " + (_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard");
+
+            var fastestPlayer = scoreTable.AsEnumerable().Where(row => row.Field<string>("Level").ToString() == _currentLevel.ToString())
+            .Select(row => new
+            {
+                Name = row.Field<string>("Name").ToString(),
+                Time = row.Field<string>("Score").ToString(),
+                TimeParts = row.Field<string>("Score").ToString().Split(ch),
+            })
+           .Select(row => new
+           {
+               row.Name,
+               Time = new TimeSpan(Convert.ToInt32(row.TimeParts[0]), Convert.ToInt32(row.TimeParts[1]), Convert.ToInt32(row.TimeParts[2]))
+           })
+           .OrderBy(row => row.Time).FirstOrDefault();
+
+            this.yourScoreLbl.Text = "You matched all icons in :" + FormatTimeSpan(currenttime);
+
+            if (!string.IsNullOrEmpty(fastestPlayer.ToString()))
+            {
+                this.highScoreLbl.Text = "Fastest Player is " + fastestPlayer?.Name + "and the Score is " + fastestPlayer?.Time + " in " + (_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard");
+            }
             //ResetValues();
         }
 
@@ -236,7 +271,7 @@ namespace WFMatchingGame
             }
 
             InitializeGameGrid();
-            _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());
+            _currentPlayerScore = _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());
             nameLevelPanel.Visible = false;
             tableLayoutPanel1.Visible = true;
             TimerLbl.Visible = true;

@@ -611,7 +611,7 @@ namespace WFMatchingGame
             this.gameOverPanel.Margin = new System.Windows.Forms.Padding(12, 3, 3, 3);
             this.gameOverPanel.Name = "gameOverPanel";
             this.gameOverPanel.Size = new System.Drawing.Size(1054, 588);
-            this.gameOverPanel.TabIndex = 9;
+            this.gameOverPanel.TabIndex = 9; 
             // 
             // label35
             // 

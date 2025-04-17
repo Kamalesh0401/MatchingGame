@@ -148,7 +148,7 @@ namespace WFMatchingGame
             gameOverPanel.Visible = true;
             DataTable scoreTable = _sqlLite.GetHighScores(_currentLevel);
 
-            var fastestPlayer = scoreTable.AsEnumerable().Where(row => row.Field<string>("Level").ToString() == _currentLevel.ToString())
+            var fastestPlayer = scoreTable.AsEnumerable().Where(row => row.Field<Int64>("Level").ToString() == _currentLevel.ToString())
             .Select(row => new
             {
                 Name = row.Field<string>("Name").ToString(),
@@ -162,11 +162,13 @@ namespace WFMatchingGame
            })
            .OrderBy(row => row.Time).FirstOrDefault();
 
-            this.yourScoreLbl.Text = "You matched all icons in :" + FormatTimeSpan(currenttime);
+            this.yourNameLbl.Text = $"Name: {_currentPlayerName}";
+            this.yourCurrentScoreLbl.Text = $"Current Score: {FormatTimeSpan(currenttime)}";
+            this.yourHighScoreLbl.Text = $"High Score: {(!string.IsNullOrEmpty(_currentPlayerScore) ? _currentPlayerScore : FormatTimeSpan(currenttime))}";
 
             if (!string.IsNullOrEmpty(fastestPlayer.ToString()))
             {
-                this.highScoreLbl.Text = "Fastest Player is " + fastestPlayer?.Name + "and the Score is " + fastestPlayer?.Time + " in " + (_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard");
+                this.highScoreLbl.Text = $"Fastest Player: {fastestPlayer?.Name ?? "N/A"}, Score: {fastestPlayer?.Time}, Level: {(_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard")}";
             }
             //ResetValues();
         }
@@ -358,7 +360,7 @@ namespace WFMatchingGame
         }
         private string FormatTimeSpan(TimeSpan ts)
         {
-            return $"{ts.Hours:D2}h:{ts.Minutes:D2} minutes:{ts.Seconds:D2} seconds";
+            return $"{ts.Hours:D2}h:{ts.Minutes:D2} min:{ts.Seconds:D2} sec";
         }
     }
 

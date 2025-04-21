@@ -148,7 +148,8 @@ namespace WFMatchingGame
             gameOverPanel.Visible = true;
             DataTable scoreTable = _sqlLite.GetHighScores(_currentLevel);
 
-            var fastestPlayer = scoreTable.AsEnumerable().Where(row => row.Field<Int64>("Level").ToString() == _currentLevel.ToString())
+            var fastestPlayer = scoreTable?.AsEnumerable()
+            .Where(row => row.Field<Int64>("Level").ToString() == _currentLevel.ToString() && row.Field<string>("Score").ToString() != "0")
             .Select(row => new
             {
                 Name = row.Field<string>("Name").ToString(),
@@ -163,14 +164,13 @@ namespace WFMatchingGame
            .OrderBy(row => row.Time).FirstOrDefault();
 
             this.yourNameLbl.Text = $"Name: {_currentPlayerName}";
-            this.yourCurrentScoreLbl.Text = $"Current Score: {FormatTimeSpan(currenttime)}";
-            this.yourHighScoreLbl.Text = $"High Score: {(!string.IsNullOrEmpty(_currentPlayerScore) ? _currentPlayerScore : FormatTimeSpan(currenttime))}";
+            this.yourCurrentScoreLbl.Text = $"Current Score: {currenttime}";
+            this.yourHighScoreLbl.Text = $"High Score: {(!string.IsNullOrEmpty(_currentPlayerScore) ? _currentPlayerScore : currenttime.ToString())}";
 
             if (!string.IsNullOrEmpty(fastestPlayer.ToString()))
             {
                 this.highScoreLbl.Text = $"Fastest Player: {fastestPlayer?.Name ?? "N/A"}, Score: {fastestPlayer?.Time}, Level: {(_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard")}";
             }
-            //ResetValues();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -273,10 +273,10 @@ namespace WFMatchingGame
             }
 
             InitializeGameGrid();
-            _currentPlayerScore = _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());
             nameLevelPanel.Visible = false;
             tableLayoutPanel1.Visible = true;
             TimerLbl.Visible = true;
+            this.setPlayerBgWorker.RunWorkerAsync();
         }
         private void playAgainBtn_Click(object sender, EventArgs e)
         {
@@ -330,6 +330,16 @@ namespace WFMatchingGame
             }
             AssignIconsToSquares();
             timer2.Start();
+        }
+
+        private void setPlayerCurrentScr(object sender, DoWorkEventArgs e)
+        {
+            _currentPlayerScore = _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());
+        }
+
+        private void setPlayerBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            setPlayerBgWorker.Dispose();
         }
 
         private Label CreateIconLabel()

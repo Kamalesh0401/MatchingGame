@@ -54,6 +54,7 @@ namespace WFMatchingGame
             this.playAgainBtn = new System.Windows.Forms.Button();
             this.ExistBtn = new System.Windows.Forms.Button();
             this.setPlayerBgWorker = new System.ComponentModel.BackgroundWorker();
+            this.updatePlayerScrBgWorker = new System.ComponentModel.BackgroundWorker();
             this.nameLevelPanel.SuspendLayout();
             this.gameOverPanel.SuspendLayout();
             this.SuspendLayout();
@@ -72,7 +73,7 @@ namespace WFMatchingGame
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66661F));
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.MinimumSize = new System.Drawing.Size(500, 350);
+            this.tableLayoutPanel1.MinimumSize = new System.Drawing.Size(500, 450);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
@@ -82,6 +83,7 @@ namespace WFMatchingGame
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(584, 350);
             this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayoutPanel1.Resize += new System.EventHandler(this.Form1_Resize);
             // 
             // timer1
             // 
@@ -121,7 +123,7 @@ namespace WFMatchingGame
             this.nameLevelPanel.Controls.Add(this.matchGameLbl, 1, 0);
             this.nameLevelPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.nameLevelPanel.Location = new System.Drawing.Point(0, 0);
-            this.nameLevelPanel.MinimumSize = new System.Drawing.Size(500, 350);
+            this.nameLevelPanel.MinimumSize = new System.Drawing.Size(500, 450);
             this.nameLevelPanel.Name = "nameLevelPanel";
             this.nameLevelPanel.RowCount = 5;
             this.nameLevelPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
@@ -206,27 +208,27 @@ namespace WFMatchingGame
             // 
             this.gameOverPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.gameOverPanel.ColumnCount = 3;
-            this.gameOverPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.86329F));
-            this.gameOverPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.29452F));
-            this.gameOverPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.85616F));
+            this.gameOverPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.gameOverPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.gameOverPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.gameOverPanel.Controls.Add(this.labelGameOver, 1, 0);
             this.gameOverPanel.Controls.Add(this.yourNameLbl, 1, 1);
             this.gameOverPanel.Controls.Add(this.yourCurrentScoreLbl, 1, 2);
             this.gameOverPanel.Controls.Add(this.yourHighScoreLbl, 1, 3);
             this.gameOverPanel.Controls.Add(this.highScoreLbl, 1, 4);
-            this.gameOverPanel.Controls.Add(this.playAgainBtn, 1, 5);
+            this.gameOverPanel.Controls.Add(this.playAgainBtn, 0, 5);
             this.gameOverPanel.Controls.Add(this.ExistBtn, 2, 5);
             this.gameOverPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gameOverPanel.Location = new System.Drawing.Point(0, 0);
-            this.gameOverPanel.MinimumSize = new System.Drawing.Size(500, 350);
+            this.gameOverPanel.MinimumSize = new System.Drawing.Size(500, 450);
             this.gameOverPanel.Name = "gameOverPanel";
-            this.gameOverPanel.RowCount = 5;
-            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.57143F));
-            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.571428F));
-            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.42857F));
-            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43.42857F));
+            this.gameOverPanel.RowCount = 6;
+            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.gameOverPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.gameOverPanel.Size = new System.Drawing.Size(584, 350);
             this.gameOverPanel.TabIndex = 9;
             // 
@@ -236,9 +238,9 @@ namespace WFMatchingGame
             this.labelGameOver.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelGameOver.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelGameOver.ForeColor = System.Drawing.Color.Red;
-            this.labelGameOver.Location = new System.Drawing.Point(130, 0);
+            this.labelGameOver.Location = new System.Drawing.Point(149, 0);
             this.labelGameOver.Name = "labelGameOver";
-            this.labelGameOver.Size = new System.Drawing.Size(299, 66);
+            this.labelGameOver.Size = new System.Drawing.Size(286, 52);
             this.labelGameOver.TabIndex = 0;
             this.labelGameOver.Text = "GAME OVER";
             this.labelGameOver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -249,9 +251,9 @@ namespace WFMatchingGame
             this.yourNameLbl.Dock = System.Windows.Forms.DockStyle.Top;
             this.yourNameLbl.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
             this.yourNameLbl.ForeColor = System.Drawing.Color.White;
-            this.yourNameLbl.Location = new System.Drawing.Point(130, 66);
+            this.yourNameLbl.Location = new System.Drawing.Point(149, 52);
             this.yourNameLbl.Name = "yourNameLbl";
-            this.yourNameLbl.Size = new System.Drawing.Size(299, 37);
+            this.yourNameLbl.Size = new System.Drawing.Size(286, 37);
             this.yourNameLbl.TabIndex = 1;
             this.yourNameLbl.Text = "Player: Kamalesh";
             this.yourNameLbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -262,9 +264,9 @@ namespace WFMatchingGame
             this.yourCurrentScoreLbl.Dock = System.Windows.Forms.DockStyle.Top;
             this.yourCurrentScoreLbl.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this.yourCurrentScoreLbl.ForeColor = System.Drawing.Color.LightGreen;
-            this.yourCurrentScoreLbl.Location = new System.Drawing.Point(130, 114);
+            this.yourCurrentScoreLbl.Location = new System.Drawing.Point(149, 104);
             this.yourCurrentScoreLbl.Name = "yourCurrentScoreLbl";
-            this.yourCurrentScoreLbl.Size = new System.Drawing.Size(299, 28);
+            this.yourCurrentScoreLbl.Size = new System.Drawing.Size(286, 32);
             this.yourCurrentScoreLbl.TabIndex = 2;
             this.yourCurrentScoreLbl.Text = "Current Score: 100";
             this.yourCurrentScoreLbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -275,9 +277,9 @@ namespace WFMatchingGame
             this.yourHighScoreLbl.Dock = System.Windows.Forms.DockStyle.Top;
             this.yourHighScoreLbl.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this.yourHighScoreLbl.ForeColor = System.Drawing.Color.Gold;
-            this.yourHighScoreLbl.Location = new System.Drawing.Point(130, 142);
+            this.yourHighScoreLbl.Location = new System.Drawing.Point(149, 156);
             this.yourHighScoreLbl.Name = "yourHighScoreLbl";
-            this.yourHighScoreLbl.Size = new System.Drawing.Size(299, 32);
+            this.yourHighScoreLbl.Size = new System.Drawing.Size(286, 32);
             this.yourHighScoreLbl.TabIndex = 3;
             this.yourHighScoreLbl.Text = "Your High Score: 150";
             this.yourHighScoreLbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -285,23 +287,23 @@ namespace WFMatchingGame
             // highScoreLbl
             // 
             this.highScoreLbl.AutoSize = true;
+            this.highScoreLbl.Dock = System.Windows.Forms.DockStyle.Top;
             this.highScoreLbl.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this.highScoreLbl.ForeColor = System.Drawing.Color.Cyan;
-            this.highScoreLbl.Location = new System.Drawing.Point(130, 186);
+            this.highScoreLbl.Location = new System.Drawing.Point(149, 208);
             this.highScoreLbl.Name = "highScoreLbl";
-            this.highScoreLbl.Size = new System.Drawing.Size(263, 32);
+            this.highScoreLbl.Size = new System.Drawing.Size(286, 32);
             this.highScoreLbl.TabIndex = 4;
             this.highScoreLbl.Text = "Top Global Score: 200";
-            this.highScoreLbl.Dock = System.Windows.Forms.DockStyle.Top;
             this.highScoreLbl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // playAgainBtn
             // 
             this.playAgainBtn.Dock = System.Windows.Forms.DockStyle.Top;
             this.playAgainBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.playAgainBtn.Location = new System.Drawing.Point(130, 332);
+            this.playAgainBtn.Location = new System.Drawing.Point(3, 263);
             this.playAgainBtn.Name = "playAgainBtn";
-            this.playAgainBtn.Size = new System.Drawing.Size(299, 15);
+            this.playAgainBtn.Size = new System.Drawing.Size(140, 35);
             this.playAgainBtn.TabIndex = 5;
             this.playAgainBtn.Text = "Play Again";
             this.playAgainBtn.UseVisualStyleBackColor = true;
@@ -311,9 +313,9 @@ namespace WFMatchingGame
             // 
             this.ExistBtn.Dock = System.Windows.Forms.DockStyle.Top;
             this.ExistBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.ExistBtn.Location = new System.Drawing.Point(435, 332);
+            this.ExistBtn.Location = new System.Drawing.Point(441, 263);
             this.ExistBtn.Name = "ExistBtn";
-            this.ExistBtn.Size = new System.Drawing.Size(146, 15);
+            this.ExistBtn.Size = new System.Drawing.Size(140, 35);
             this.ExistBtn.TabIndex = 6;
             this.ExistBtn.Text = "Exit";
             this.ExistBtn.UseVisualStyleBackColor = true;
@@ -323,6 +325,11 @@ namespace WFMatchingGame
             // 
             this.setPlayerBgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.setPlayerCurrentScr);
             this.setPlayerBgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.setPlayerBgWorker_RunWorkerCompleted);
+            // 
+            // updatePlayerScrBgWorker
+            // 
+            this.updatePlayerScrBgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updatePlayerCurrentScrBgWorker);
+            this.updatePlayerScrBgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.updatePlayerCurrentScrBgWorker_RunWorkerCompleted);
             // 
             // Form1
             // 
@@ -334,7 +341,7 @@ namespace WFMatchingGame
             this.Controls.Add(this.TimerLbl);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.gameOverPanel);
-            this.MinimumSize = new System.Drawing.Size(600, 350);
+            this.MinimumSize = new System.Drawing.Size(600, 450);
             this.Name = "Form1";
             this.Text = "Matching Game";
             this.nameLevelPanel.ResumeLayout(false);
@@ -352,6 +359,7 @@ namespace WFMatchingGame
         private System.Windows.Forms.Label TimerLbl;
         private System.Windows.Forms.Timer timer2;
         private BackgroundWorker setPlayerBgWorker;
+        private BackgroundWorker updatePlayerScrBgWorker;
         private TableLayoutPanel nameLevelPanel;
         private Label enterNameLbl;
         private TextBox nameTextBox;

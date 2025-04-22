@@ -134,12 +134,14 @@ namespace WFMatchingGame
                 var score = new TimeSpan(Convert.ToInt32(crntPlyrHghtime[0]), Convert.ToInt32(crntPlyrHghtime[1]), Convert.ToInt32(crntPlyrHghtime[2]));
                 if (score > currenttime)
                 {
-                    _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+                    this.updatePlayerScrBgWorker.RunWorkerAsync(timeDisplay);
+                    //_sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
                 }
             }
             else
             {
-                _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+                this.updatePlayerScrBgWorker.RunWorkerAsync(timeDisplay);
+                // _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
 
             }
 
@@ -169,7 +171,7 @@ namespace WFMatchingGame
 
             if (!string.IsNullOrEmpty(fastestPlayer.ToString()))
             {
-                this.highScoreLbl.Text = $"Fastest Player: {fastestPlayer?.Name ?? "N/A"}, Score: {fastestPlayer?.Time}, Level: {(_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard")}";
+                this.highScoreLbl.Text = $"Fastest Player: {fastestPlayer?.Name ?? "N/A"}, Score: {fastestPlayer?.Time}"; //, Level: {(_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard")}
             }
         }
 
@@ -213,7 +215,24 @@ namespace WFMatchingGame
         {
             foreach (Control c in tableLayoutPanel1.Controls)
             {
-                float newFontSize = this.Width / 30f; // Adjust this value as needed
+                float newFontSize;
+                if (this.Width > 1500)
+                {
+                    newFontSize = this.Width / 12f;
+                }
+                else if (this.Width <= 1500 && this.Width > 1000)
+                {
+                    newFontSize = this.Width / 15f;
+
+                }
+                else if (this.Width <= 1000 && this.Width > 600)
+                {
+                    newFontSize = this.Width / 17f;
+                }
+                else
+                {
+                    newFontSize = this.Width / 15f;
+                }
                 c.Font = new Font("Webdings", newFontSize, FontStyle.Bold);
             }
         }
@@ -332,6 +351,27 @@ namespace WFMatchingGame
             timer2.Start();
         }
 
+        private void updatePlayerCurrentScrBgWorker(object sender, DoWorkEventArgs e)
+        {
+            string timeDisplay = "";
+            if (e.Argument != null)
+                if (e.Argument is string)
+                {
+                    timeDisplay = e.Argument as string;
+                }
+                else
+                {
+                    string[] parameters = (string[])e.Argument;
+                    timeDisplay = parameters[0];
+
+                }
+            _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
+        }
+
+        private void updatePlayerCurrentScrBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            updatePlayerScrBgWorker.Dispose();
+        }
         private void setPlayerCurrentScr(object sender, DoWorkEventArgs e)
         {
             _currentPlayerScore = _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());

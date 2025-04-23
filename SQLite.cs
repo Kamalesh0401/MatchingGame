@@ -152,7 +152,6 @@ namespace WFMatchingGame
 
         public void GameFinished(string _currentPlayerName, string timetoSolve, string level)
         {
-            int finalScore = 0;
             if (!string.IsNullOrEmpty(_currentPlayerName))
             {
                 UpdatePlayerScore(_currentPlayerName, timetoSolve, level);
@@ -168,11 +167,11 @@ namespace WFMatchingGame
                 using (SQLiteConnection dbConnection = new SQLiteConnection(_connectionString))
                 {
                     dbConnection.Open();
-                    //string selectQuery = $"SELECT Name, Score FROM {PlayersTable} WHERE Level = @level ORDER BY score;";
-                    string selectQuery = $"SELECT Name, Score, Level FROM {PlayersTable};";
+                    string selectQuery = $"SELECT Name, Score,Level FROM {PlayersTable} WHERE Level = @level;";
+                    //string selectQuery = $"SELECT Name, Score, Level FROM {PlayersTable};";
                     using (SQLiteCommand command = new SQLiteCommand(selectQuery, dbConnection))
                     {
-                        //command.Parameters.AddWithValue("@level", level);
+                        command.Parameters.AddWithValue("@level", level);
                         using (var adapter = new SQLiteDataAdapter(command))
                         {
                             adapter.Fill(highScoreTable);

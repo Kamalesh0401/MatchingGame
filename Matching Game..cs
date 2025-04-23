@@ -19,30 +19,43 @@ namespace WFMatchingGame
             InitializeComponent();
             _sqlLite = new SQLlite(this.levelComboBox.Items);
             tableLayoutPanel1.Visible = false;
+            ScoreTablePanel.Visible = false;
             gameOverPanel.Visible = false;
             TimerLbl.Visible = false;
+            //BackBtn.Visible = false;
             nameLevelPanel.Visible = true;
         }
 
         Random random = new Random();
-        List<string> icons = new List<string>()
-        {
-            "!", "!",     // Exclamation mark - speaker
-            "N", "N",     // Flag
-            "k", "k",     // Airplane
-            "y", "y",     // Checkmark
-            "b", "b",     // Star
-            "v", "v",     // Key
-            "w", "w",     // Lock
-            "z", "z",     // Heart
-            "d", "d",     // Clock
-            "t", "t",     // Mail
-            "f", "f",     // Note
-            "h", "h",     // Pen
-            "j", "j",     // Globe
-            "l", "l",     // Eye
-            "p", "p"      // Thumbs up
-        };
+        List<string> iconsClassic = new List<string>() { "!", "!", "N", "N", "k", "k", "y", "y", "b", "b", "v", "v", "w", "w", "z", "z", "x", "x", "l", "l", "u", "u", "j", "j" };
+
+        List<string> iconsAnimals = new List<string>() { "🐱", "🐱", "🐶", "🐶", "🐴", "🐴", "🐸", "🐸", "🐦", "🐦", "🐞", "🐞", "🐍", "🐍", "🐟", "🐟", "🦁", "🦁", "🦉", "🦉", "🐢", "🐢", "🦋", "🦋" };
+
+        List<string> iconsFruits = new List<string>() { "h", "h", "b", "b", "v", "v", "y", "y", "l", "l", "f", "f", "z", "z", "w", "w", "n", "n", "p", "p", "q", "q", "e", "e" };
+
+        List<string> iconsNumbers = new List<string>() { "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6", "6", "7", "7", "8", "8", "9", "9", "0", "0", "#", "#", "*", "*" };
+
+        List<string> iconsLetters = new List<string>() { "A", "A", "B", "B", "C", "C", "D", "D", "E", "E", "F", "F", "G", "G", "H", "H", "I", "I", "J", "J", "K", "K", "L", "L" };
+
+
+        //List<string> iconsClassic = new List<string>()
+        //{
+        //    "!", "!",     // Exclamation mark - speaker
+        //    "N", "N",     // Flag
+        //    "k", "k",     // Airplane
+        //    "y", "y",     // Checkmark
+        //    "b", "b",     // Star
+        //    "v", "v",     // Key
+        //    "w", "w",     // Lock
+        //    "z", "z",     // Heart
+        //    "d", "d",     // Clock
+        //    "t", "t",     // Mail
+        //    "f", "f",     // Note
+        //    "h", "h",     // Pen
+        //    "j", "j",     // Globe
+        //    "l", "l",     // Eye
+        //    "p", "p"      // Thumbs up
+        //};
 
         Label firstClicked = null;
         Label secondClicked = null;
@@ -57,6 +70,8 @@ namespace WFMatchingGame
         private string _currentPlayerScore = "";
         private int _currentLevel = 0;
         private string _highScore = "";
+        private List<string> SelectedList = new List<string>();
+        DataTable scoreTable = new DataTable();
 
         private void ResetValues()
         {
@@ -66,10 +81,6 @@ namespace WFMatchingGame
             elapsedMinutes = 0;
             elapsedHours = 0;
             animationStep = 0;
-            icons = new List<string>()
-            {
-            "!", "!","N", "N","k", "k","y", "y","b", "b","v", "v","w", "w","z", "z","d", "d","t", "t","f", "f","h", "h","j", "j","l", "l","p", "p"
-            };
             AssignIconsToSquares();
             timer2.Start();
         }
@@ -128,7 +139,7 @@ namespace WFMatchingGame
             string timeDisplay = string.Format("{0:00}:{1:00}:{2:00}", elapsedHours, elapsedMinutes, elapsedSeconds);
             //MessageBox.Show("Fantastic! You matched all the icons in " + timeDisplay + "", "Congratulations");
             var currenttime = new TimeSpan(elapsedHours, elapsedMinutes, elapsedSeconds);
-            if (!string.IsNullOrEmpty(_currentPlayerScore))
+            if (!string.IsNullOrEmpty(_currentPlayerScore) && _currentPlayerScore != "0")
             {
                 string[] crntPlyrHghtime = _currentPlayerScore?.ToString().Split(ch);
                 var score = new TimeSpan(Convert.ToInt32(crntPlyrHghtime[0]), Convert.ToInt32(crntPlyrHghtime[1]), Convert.ToInt32(crntPlyrHghtime[2]));
@@ -142,13 +153,14 @@ namespace WFMatchingGame
             {
                 this.updatePlayerScrBgWorker.RunWorkerAsync(timeDisplay);
                 // _sqlLite.GameFinished(_currentPlayerName, timeDisplay, _currentLevel.ToString());
-
             }
 
             tableLayoutPanel1.Visible = false;
             TimerLbl.Visible = false;
+            //BackBtn.Visible = false;
             gameOverPanel.Visible = true;
-            DataTable scoreTable = _sqlLite.GetHighScores(_currentLevel);
+            ScoreTablePanel.Visible = false;
+            scoreTable = _sqlLite.GetHighScores(_currentLevel);
 
             var fastestPlayer = scoreTable?.AsEnumerable()
             .Where(row => row.Field<Int64>("Level").ToString() == _currentLevel.ToString() && row.Field<string>("Score").ToString() != "0")
@@ -167,7 +179,7 @@ namespace WFMatchingGame
 
             this.yourNameLbl.Text = $"Name: {_currentPlayerName}";
             this.yourCurrentScoreLbl.Text = $"Current Score: {currenttime}";
-            this.yourHighScoreLbl.Text = $"High Score: {(!string.IsNullOrEmpty(_currentPlayerScore) ? _currentPlayerScore : currenttime.ToString())}";
+            this.yourHighScoreLbl.Text = $"High Score: {((!string.IsNullOrEmpty(_currentPlayerScore) && _currentPlayerScore != "0") ? _currentPlayerScore : currenttime.ToString())}";
 
             if (!string.IsNullOrEmpty(fastestPlayer.ToString()))
             {
@@ -223,7 +235,6 @@ namespace WFMatchingGame
                 else if (this.Width <= 1500 && this.Width > 1000)
                 {
                     newFontSize = this.Width / 15f;
-
                 }
                 else if (this.Width <= 1000 && this.Width > 600)
                 {
@@ -233,7 +244,10 @@ namespace WFMatchingGame
                 {
                     newFontSize = this.Width / 15f;
                 }
-                c.Font = new Font("Webdings", newFontSize, FontStyle.Bold);
+                //c.Font = new Font("Webdings", newFontSize, FontStyle.Bold);
+                //c.Font = new Font("Segoe UI Emoji", newFontSize, FontStyle.Regular);
+                c.Font = GetLabelFont(newFontSize);
+
             }
         }
         private async void HighlightMatch(Label card1, Label card2)
@@ -278,7 +292,6 @@ namespace WFMatchingGame
             tableLayoutPanel1.Controls.Clear();
             tableLayoutPanel1.RowStyles.Clear();
             tableLayoutPanel1.ColumnStyles.Clear();
-
             tableLayoutPanel1.RowCount = rows;
             tableLayoutPanel1.ColumnCount = columns;
 
@@ -294,7 +307,9 @@ namespace WFMatchingGame
             InitializeGameGrid();
             nameLevelPanel.Visible = false;
             tableLayoutPanel1.Visible = true;
+            ScoreTablePanel.Visible = false;
             TimerLbl.Visible = true;
+            //BackBtn.Visible = true;
             this.setPlayerBgWorker.RunWorkerAsync();
         }
         private void playAgainBtn_Click(object sender, EventArgs e)
@@ -304,12 +319,59 @@ namespace WFMatchingGame
             gameOverPanel.Visible = false;
             tableLayoutPanel1.Visible = true;
             TimerLbl.Visible = true;
+            //BackBtn.Visible = true;
         }
         private void EixtsBtn_Click(object sender, EventArgs e)
         {
-            this.Close();
+            //this.Close();
+            nameLevelPanel.Visible = true;
+            gameOverPanel.Visible = false;
+            tableLayoutPanel1.Visible = false;
+            ScoreTablePanel.Visible = false;
         }
+        private void BackBtn_Click(object sender, EventArgs e)
+        {
+            timer2.Stop();
+            TimerLbl.Visible = false;
+            //BackBtn.Visible = false;
+            nameLevelPanel.Visible = true;
+            gameOverPanel.Visible = false;
+            tableLayoutPanel1.Visible = false;
+            ScoreTablePanel.Visible = false;
+        }
+        private void ScoreTableCloseBtn_Click(object sender, EventArgs e)
+        {
+            nameLevelPanel.Visible = false;
+            gameOverPanel.Visible = true;
+            tableLayoutPanel1.Visible = false;
+            ScoreTablePanel.Visible = false;
+        }
+        private void LoadLeaderboard(object sender, EventArgs e)
+        {
+            nameLevelPanel.Visible = false;
+            gameOverPanel.Visible = false;
+            tableLayoutPanel1.Visible = false;
+            ScoreTablePanel.Visible = true;
+            var t = _sqlLite.GetHighScores(_currentLevel).AsEnumerable().ToList();
+            //var t = scoreTable.AsEnumerable().ToList();
+            var result = new List<Player>();
+            foreach (DataRow r in t)
+            {
+                result.Add(new Player()
+                {
+                    Name = r.Field<string>("Name").ToString(),
+                    Score = r.Field<string>("Score").ToString(),
+                    Level = r.Field<Int64>("Level").ToString(),
 
+                });
+            }
+            scoreTableGridView.DataSource = result
+                .Where(r => r.Score != "0")
+                .OrderBy(r => r.Score).ThenBy(r => r.Level).ToList();
+            this.ScoreTablePanel.BringToFront();
+
+            // Optionally, customize column headers
+        }
         private void SetGridSizeByLevel(string level)
         {
             // Your logic to determine rows and columns based on the level
@@ -372,6 +434,7 @@ namespace WFMatchingGame
         {
             updatePlayerScrBgWorker.Dispose();
         }
+
         private void setPlayerCurrentScr(object sender, DoWorkEventArgs e)
         {
             _currentPlayerScore = _sqlLite.LoadOrCreatePlayerScore(_currentPlayerName, _currentLevel.ToString());
@@ -388,14 +451,16 @@ namespace WFMatchingGame
             label.AutoSize = true;
             label.Dock = DockStyle.Fill;
             label.TextAlign = ContentAlignment.MiddleCenter;
-            label.Font = new Font("Webdings", 48F, FontStyle.Bold); // Example icon font
+            //label.Font = new Font("Webdings", 48F, FontStyle.Bold); // Example icon font
+            label.Font = GetLabelFont();
             label.ForeColor = label.BackColor;
             label.Click += new EventHandler(label1_Click); // Your click event handler
             return label;
         }
         private void AssignIconsToSquares()
         {
-            var temp = icons.Take(tableLayoutPanel1.Controls.Count).ToList();
+            SelectedList = GetSelectedIcons();
+            var temp = SelectedList.Take(tableLayoutPanel1.Controls.Count).ToList();
             foreach (Control control in tableLayoutPanel1.Controls)
             {
                 Label iconLabel = control as Label;
@@ -412,8 +477,46 @@ namespace WFMatchingGame
         {
             return $"{ts.Hours:D2}h:{ts.Minutes:D2} min:{ts.Seconds:D2} sec";
         }
+        private List<string> GetSelectedIcons()
+        {
+            switch (ComboBoxTheme.SelectedItem.ToString())
+            {
+                case "Animals": return new List<string>(iconsAnimals);
+                case "Fruits": return new List<string>(iconsFruits);
+                case "Numbers": return new List<string>(iconsNumbers);
+                case "Letters": return new List<string>(iconsLetters);
+                case "Classic":
+                default: return new List<string>(iconsClassic);
+            }
+        }
+        private Font GetLabelFont(float fontSize = 48)
+        {
+            switch (ComboBoxTheme.SelectedItem.ToString())
+            {
+                case "Classic":
+                    return new Font("Webdings", fontSize, FontStyle.Bold);
+                case "Animals":
+                    return new Font("Segoe UI Emoji", fontSize, FontStyle.Regular);
+                case "Fruits":
+                    return new Font("Wingdings", fontSize, FontStyle.Bold);
+                case "Numbers":
+                    return new Font("Segoe UI", fontSize, FontStyle.Bold);
+                case "Letters":
+                    return new Font("Segoe UI", fontSize, FontStyle.Bold);
+                default: return new Font("Webdings", fontSize, FontStyle.Bold);
+            }
+
+        }
+
+
+
     }
-
-
+    public class Player
+    {
+        public string Name { get; set; }
+        public string Score { get; set; }
+        public string Level { get; set; }
+    }
 }
+
 

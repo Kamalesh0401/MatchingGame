@@ -22,7 +22,7 @@ namespace WFMatchingGame
             ScoreTablePanel.Visible = false;
             gameOverPanel.Visible = false;
             TimerLbl.Visible = false;
-            //BackBtn.Visible = false;
+            StopBtn.Visible = false;
             nameLevelPanel.Visible = true;
         }
 
@@ -157,7 +157,7 @@ namespace WFMatchingGame
 
             tableLayoutPanel1.Visible = false;
             TimerLbl.Visible = false;
-            //BackBtn.Visible = false;
+            StopBtn.Visible = false;
             gameOverPanel.Visible = true;
             ScoreTablePanel.Visible = false;
             scoreTable = _sqlLite.GetHighScores(_currentLevel);
@@ -181,7 +181,7 @@ namespace WFMatchingGame
             this.yourCurrentScoreLbl.Text = $"Current Score: {currenttime}";
             this.yourHighScoreLbl.Text = $"High Score: {((!string.IsNullOrEmpty(_currentPlayerScore) && _currentPlayerScore != "0") ? _currentPlayerScore : currenttime.ToString())}";
 
-            if (!string.IsNullOrEmpty(fastestPlayer.ToString()))
+            if (!string.IsNullOrEmpty(fastestPlayer?.ToString()))
             {
                 this.highScoreLbl.Text = $"Fastest Player: {fastestPlayer?.Name ?? "N/A"}, Score: {fastestPlayer?.Time}"; //, Level: {(_currentLevel == 1 ? "Easy" : _currentLevel == 2 ? "Medium" : "Hard")}
             }
@@ -309,7 +309,7 @@ namespace WFMatchingGame
             tableLayoutPanel1.Visible = true;
             ScoreTablePanel.Visible = false;
             TimerLbl.Visible = true;
-            //BackBtn.Visible = true;
+            StopBtn.Visible = true;
             this.setPlayerBgWorker.RunWorkerAsync();
         }
         private void playAgainBtn_Click(object sender, EventArgs e)
@@ -319,25 +319,36 @@ namespace WFMatchingGame
             gameOverPanel.Visible = false;
             tableLayoutPanel1.Visible = true;
             TimerLbl.Visible = true;
-            //BackBtn.Visible = true;
+            StopBtn.Visible = true;
         }
         private void EixtsBtn_Click(object sender, EventArgs e)
         {
             //this.Close();
+            ResetValues();
             nameLevelPanel.Visible = true;
             gameOverPanel.Visible = false;
             tableLayoutPanel1.Visible = false;
             ScoreTablePanel.Visible = false;
         }
-        private void BackBtn_Click(object sender, EventArgs e)
+        private void StopBtn_Click(object sender, EventArgs e)
         {
-            timer2.Stop();
-            TimerLbl.Visible = false;
-            //BackBtn.Visible = false;
-            nameLevelPanel.Visible = true;
-            gameOverPanel.Visible = false;
-            tableLayoutPanel1.Visible = false;
-            ScoreTablePanel.Visible = false;
+            if (timer2.Enabled)
+            {
+                timer2.Stop();
+                this.StopBtn.Text = "⏸️";
+            }
+            else
+            {
+                timer2.Start();
+                this.StopBtn.Text = "▶️";
+            }
+
+            //TimerLbl.Visible = false;
+            ////StopBtn.Visible = false;
+            //nameLevelPanel.Visible = true;
+            //gameOverPanel.Visible = false;
+            //tableLayoutPanel1.Visible = false;
+            //ScoreTablePanel.Visible = false;
         }
         private void ScoreTableCloseBtn_Click(object sender, EventArgs e)
         {

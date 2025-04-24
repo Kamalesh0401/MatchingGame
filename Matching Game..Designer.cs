@@ -38,6 +38,7 @@ namespace WFMatchingGame
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.TimerLbl = new System.Windows.Forms.Label();
+            this.StopBtn = new System.Windows.Forms.Button();
             this.ScoreTablePanel = new System.Windows.Forms.Panel();
             this.scoreTableGridView = new System.Windows.Forms.DataGridView();
             this.ScoreTableCloseBtn = new System.Windows.Forms.Button();
@@ -98,7 +99,7 @@ namespace WFMatchingGame
             // TimerLbl
             // 
             this.TimerLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TimerLbl.Location = new System.Drawing.Point(12, 9);
+            this.TimerLbl.Location = new System.Drawing.Point(51, 0);
             this.TimerLbl.MaximumSize = new System.Drawing.Size(300, 30);
             this.TimerLbl.MinimumSize = new System.Drawing.Size(200, 30);
             this.TimerLbl.Name = "TimerLbl";
@@ -107,6 +108,20 @@ namespace WFMatchingGame
             this.TimerLbl.Text = "Timer : ";
             this.TimerLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.TimerLbl.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // StopBtn
+            // 
+            this.StopBtn.Dock = System.Windows.Forms.DockStyle.Top;
+            this.StopBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.StopBtn.Location = new System.Drawing.Point(0, 0);
+            this.StopBtn.MaximumSize = new System.Drawing.Size(50, 30);
+            this.StopBtn.MinimumSize = new System.Drawing.Size(50, 30);
+            this.StopBtn.Name = "StopBtn";
+            this.StopBtn.Size = new System.Drawing.Size(50, 30);
+            this.StopBtn.TabIndex = 6;
+            this.StopBtn.Text = "▶";
+            this.StopBtn.UseVisualStyleBackColor = true;
+            this.StopBtn.Click += new System.EventHandler(this.StopBtn_Click);
             // 
             // ScoreTablePanel
             // 
@@ -445,6 +460,7 @@ namespace WFMatchingGame
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(584, 411);
             this.Controls.Add(this.TimerLbl);
+            this.Controls.Add(this.StopBtn);
             this.Controls.Add(this.nameLevelPanel);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.gameOverPanel);
@@ -491,7 +507,8 @@ namespace WFMatchingGame
         private Panel ScoreTablePanel;
         private DataGridView scoreTableGridView;
         private Button ScoreTableCloseBtn;
-        //private Button BackBtn;
+        private Button StopBtn;
+        // this.StopBtn = new System.Windows.Forms.Button();
     }
 }
 

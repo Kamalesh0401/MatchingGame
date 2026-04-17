@@ -15,6 +15,10 @@ A classic **Matching Game** (Memory Game) developed using **C#** and **Windows F
 - 💾 Progress and statistics saved using SQLite
 - 🏆 Final score display after game completion
 
+📥 Download Installer
+
+👉 [Download Matching Game Installer](https://drive.google.com/file/d/1pIybKrUqgQSbmt7RReiaQ8KEB3NWvRiI/view?usp=sharing)
+
 
 ## 🛠 Technologies Used
 

@@ -204,7 +204,7 @@ namespace WFMatchingGame
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                Console.WriteLine($"");
+                Console.WriteLine($"{ex.Message}");
             }
             return highScoreTable;
         }

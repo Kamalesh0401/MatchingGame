@@ -21,10 +21,27 @@ namespace WFMatchingGame
         private const string DatabaseFileName = "MatchingGame.sqlite";
         private const string PlayersTable = "Players";
 
+        //public SQLlite(object columns)
+        //{
+        //    //_dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "SQLiteFiles", DatabaseFileName);
+        //    _dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SQLiteFiles", DatabaseFileName);
+        //    _connectionString = $"Data Source={_dbPath};Version=3;";
+
+        //    InitializeDatabase(columns);
+        //}
+
         public SQLlite(object columns)
         {
-            //_dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "SQLiteFiles", DatabaseFileName);
-            _dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SQLiteFiles", DatabaseFileName);
+            string folderPath = Path.Combine(@"C:\Temp", "MatchingGame");
+
+            // Create folder if not exists
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            _dbPath = Path.Combine(folderPath, DatabaseFileName);
+
             _connectionString = $"Data Source={_dbPath};Version=3;";
 
             InitializeDatabase(columns);
@@ -80,6 +97,7 @@ namespace WFMatchingGame
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message);
                     Console.WriteLine($"Database file already exists at: {_dbPath}"); // Output the path
                 }
             }
@@ -122,7 +140,7 @@ namespace WFMatchingGame
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
             return result;
         }
@@ -185,6 +203,7 @@ namespace WFMatchingGame
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 Console.WriteLine($"");
             }
             return highScoreTable;
